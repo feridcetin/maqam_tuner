@@ -1,0 +1,58 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Microphone: the whole point of a tuner. Audio stays on the device. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Ads, purchases and the privacy-policy link need the internet (release builds do not get it by default). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Required for the advertising ID on Android 13+ (AdMob). -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
+    <!-- WAKE_LOCK (wakelock_plus) and BILLING (in_app_purchase) are added automatically by the plugins. -->
+
+    <uses-feature android:name="android.hardware.microphone" android:required="true"/>
+
+    <application
+        android:label="Maqam Tuner"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher">
+
+        <!-- AdMob app ID. This is Google's TEST app ID: replace it with your own before release. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2120666198065087~4417837590"/>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme"/>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Do not remove: Flutter tool uses it to generate GeneratedPluginRegistrant. -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2"/>
+    </application>
+
+    <!-- Needed so url_launcher can open the privacy policy on Android 11+. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>
