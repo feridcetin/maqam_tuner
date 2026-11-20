@@ -27,6 +27,8 @@ ThemeData buildTheme() {
     appBarTheme: const AppBarTheme(
       backgroundColor: Palette.bg,
       foregroundColor: Palette.ivory,
+      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
       elevation: 0,
       centerTitle: false,
     ),

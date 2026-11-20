@@ -216,7 +216,7 @@ class _TonePageState extends State<TonePage> {
               else ...[
                 Text(
                   L10n.i.fmt('{0} on {1} · {2}', [
-                    maqam.name,
+                    L10n.i.t(maqam.name),
                     tonicName(maqam.divisions, s.tonicPos, s.naming),
                     maqam.systemLabel,
                   ]),

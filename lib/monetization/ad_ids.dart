@@ -2,7 +2,7 @@
 /// While [useTestAds] is true, Google's official test units are used, which is
 /// the only safe way to develop (clicking your own live ads can get the
 /// account banned).
-const bool useTestAds = true;
+const bool useTestAds = false;
 
 // Google's public test IDs.
 const _testBanner = 'ca-app-pub-3940256099942544/6300978111';

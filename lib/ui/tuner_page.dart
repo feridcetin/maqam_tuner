@@ -110,10 +110,12 @@ class _TunerPageState extends State<TunerPage> {
 
         final String subtitle;
         if (inst != null) {
-          subtitle = L10n.i.fmt('{0} · targets in 12-TET', [inst.name]);
+          subtitle = L10n.i.fmt('{0} · targets in 12-TET', [
+            L10n.i.t(inst.name),
+          ]);
         } else if (maqam != null) {
           subtitle = L10n.i.fmt('{0} on {1} · {2}', [
-            maqam.name,
+            L10n.i.t(maqam.name),
             tonicName(maqam.divisions, state.tonicPos, state.naming),
             maqam.systemLabel,
           ]);
@@ -163,7 +165,7 @@ class _TunerPageState extends State<TunerPage> {
                       label: Tx(
                         maqam == null
                             ? 'Scale: off'
-                            : L10n.i.fmt('Scale: {0}', [maqam.name]),
+                            : L10n.i.fmt('Scale: {0}', [L10n.i.t(maqam.name)]),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -193,7 +195,9 @@ class _TunerPageState extends State<TunerPage> {
                           fontSize: 104,
                           fontWeight: FontWeight.w300,
                           height: 1.0,
-                          color: inTune ? Palette.ok : Palette.ivory,
+                          color: r == null
+                              ? Palette.line
+                              : (inTune ? Palette.ok : Palette.ivory),
                         ),
                       ),
                       if (r?.octave != null)
@@ -422,95 +426,124 @@ class _TunerPageState extends State<TunerPage> {
         builder: (ctx, _) {
           final current = maqamById(state.maqamId);
           return SafeArea(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
-                  child: Tx(
-                    'Scale practice shows the nearest degree of a scale and how far '
-                    'you are from it. Values are standard theoretical ones; '
-                    'players and regions differ.',
-                    style: TextStyle(color: Palette.muted, fontSize: 13),
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.block),
-                  title: const Tx('Off'),
-                  selected: state.maqamId == 'off',
-                  onTap: () {
-                    state.setMaqam('off');
-                    Navigator.pop(ctx);
-                  },
-                ),
-                if (current != null)
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(ctx).height * 0.82,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Title and Done stay visible; only the list below scrolls.
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 4,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 16, 4),
                     child: Row(
                       children: [
-                        const Tx('Tonic', style: TextStyle(fontSize: 16)),
-                        const SizedBox(width: 16),
-                        DropdownButton<int>(
-                          value:
-                              tonicChoices(current.divisions)
-                                  .contains(state.tonicPos)
-                              ? state.tonicPos
-                              : defaultTonic(current.divisions),
-                          dropdownColor: Palette.panel,
-                          items: [
-                            for (final p in tonicChoices(current.divisions))
-                              DropdownMenuItem(
-                                value: p,
-                                child: Tx(
-                                  tonicName(current.divisions, p, state.naming),
-                                ),
-                              ),
-                          ],
-                          onChanged: (v) {
-                            if (v != null) state.setTonic(v);
-                          },
+                        const Expanded(
+                          child: Tx(
+                            'Scale',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        FilledButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: const Tx('Done'),
                         ),
                       ],
                     ),
                   ),
-                for (final m in builtInMaqams)
-                  ListTile(
-                    leading: Icon(
-                      (m.pro && !state.isPro)
-                          ? Icons.lock_outline
-                          : Icons.timeline,
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
+                    child: Tx(
+                      'Scale practice shows the nearest degree of a scale and how far '
+                      'you are from it. Values are standard theoretical ones; '
+                      'players and regions differ.',
+                      style: TextStyle(color: Palette.muted, fontSize: 13),
                     ),
-                    title: Tx(m.name),
-                    subtitle: Tx(m.systemLabel),
-                    selected: state.maqamId == m.id,
-                    trailing: (m.pro && !state.isPro)
-                        ? const Tx(
-                            'Pro',
-                            style: TextStyle(color: Palette.brass),
-                          )
-                        : null,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.block),
+                    title: const Tx('Off'),
+                    selected: state.maqamId == 'off',
                     onTap: () {
-                      if (m.pro && !state.isPro) {
-                        Navigator.pop(ctx);
-                        _openPaywall(context);
-                      } else {
-                        state.setMaqam(m.id);
-                      }
+                      state.setMaqam('off');
+                      Navigator.pop(ctx);
                     },
                   ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: FilledButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: const Tx('Done'),
+                  if (current != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 4,
+                      ),
+                      child: Row(
+                        children: [
+                          const Tx('Tonic', style: TextStyle(fontSize: 16)),
+                          const SizedBox(width: 16),
+                          DropdownButton<int>(
+                            value:
+                                tonicChoices(current.divisions)
+                                    .contains(state.tonicPos)
+                                ? state.tonicPos
+                                : defaultTonic(current.divisions),
+                            dropdownColor: Palette.panel,
+                            items: [
+                              for (final p in tonicChoices(current.divisions))
+                                DropdownMenuItem(
+                                  value: p,
+                                  child: Tx(
+                                    tonicName(
+                                      current.divisions,
+                                      p,
+                                      state.naming,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                            onChanged: (v) {
+                              if (v != null) state.setTonic(v);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  const Divider(height: 1),
+                  Flexible(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        for (final m in builtInMaqams)
+                          ListTile(
+                            leading: Icon(
+                              (m.pro && !state.isPro)
+                                  ? Icons.lock_outline
+                                  : Icons.timeline,
+                            ),
+                            title: Tx(m.name),
+                            subtitle: Tx(m.systemLabel),
+                            selected: state.maqamId == m.id,
+                            trailing: (m.pro && !state.isPro)
+                                ? const Tx(
+                                    'Pro',
+                                    style: TextStyle(color: Palette.brass),
+                                  )
+                                : null,
+                            onTap: () {
+                              if (m.pro && !state.isPro) {
+                                Navigator.pop(ctx);
+                                _openPaywall(context);
+                              } else {
+                                state.setMaqam(m.id);
+                              }
+                            },
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 12),
-              ],
+                ],
+              ),
             ),
           );
         },

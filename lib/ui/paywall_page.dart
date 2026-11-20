@@ -190,7 +190,7 @@ class PaywallPage extends StatelessWidget {
     bool best = false,
   }) {
     final ProductDetails? p = billing.products[id];
-    final price = p?.price ?? '—';
+    final price = p?.price;
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: FilledButton(
@@ -202,7 +202,9 @@ class PaywallPage extends StatelessWidget {
         ),
         child: FittedBox(
           fit: BoxFit.scaleDown,
-          child: Tx('${L10n.i.t(label)} · $price'),
+          child: Tx(
+            price == null ? L10n.i.t(label) : '${L10n.i.t(label)} · $price',
+          ),
         ),
       ),
     );

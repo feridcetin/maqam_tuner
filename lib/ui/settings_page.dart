@@ -165,7 +165,23 @@ class SettingsPage extends StatelessWidget {
                       )
                     : const SizedBox.shrink(),
               ),
-              /*ListTile(
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.mail_outline),
+                title: const Tx('Send feedback'),
+                subtitle: const Tx(
+                  'Tell us about a problem before you rate the app.',
+                ),
+                onTap: () => launchUrl(
+                  Uri.parse(
+                    'mailto:feridevelop@gmail.com'
+                    '?subject=${Uri.encodeComponent('Maqam Tuner feedback')}'
+                    '&body=${Uri.encodeComponent('\n\n---\nLanguage: ${L10n.i.code}')}',
+                  ),
+                  mode: LaunchMode.externalApplication,
+                ),
+              ),
+              ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.description_outlined),
                 title: const Tx('Privacy policy'),
@@ -178,7 +194,7 @@ class SettingsPage extends StatelessWidget {
               const Tx(
                 'Audio is processed on your device only. It is never recorded or sent anywhere.',
                 style: TextStyle(color: Palette.muted, fontSize: 13),
-              ),*/
+              ),
             ],
           ),
         );

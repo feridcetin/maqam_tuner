@@ -76,7 +76,10 @@ Reading? computeReading(AppState s, double? hz, {int? stickyStep}) {
     final p = sys.describeStep(r.step, a4: s.a4, naming: s.naming);
     final parts = <String>[
       if (p.detail != null) p.detail!,
-      L10n.i.fmt('degree {0} of {1}', [r.degreeIndex + 1, maqam.name]),
+      L10n.i.fmt('degree {0} of {1}', [
+        r.degreeIndex + 1,
+        L10n.i.t(maqam.name),
+      ]),
     ];
     return Reading(
       note: p.name,
