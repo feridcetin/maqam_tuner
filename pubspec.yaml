@@ -1,7 +1,7 @@
 name: maqam_tuner
 description: Microtonal tuner (12 / 24 / 53 divisions) for oud, saz, qanun, ney, violin and more.
 publish_to: 'none'
-version: 1.1.0+1
+version: 1.1.0+2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'

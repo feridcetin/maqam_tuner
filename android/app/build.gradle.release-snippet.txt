@@ -1,0 +1,30 @@
+Open android/app/build.gradle.kts (Kotlin DSL, newer Flutter projects) or android/app/build.gradle (Groovy)
+and make the release build type look like this. Keep YOUR existing signingConfig line.
+
+--- build.gradle.kts -------------------------------------------------
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName("release")   // your existing line
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+--- build.gradle (Groovy) -------------------------------------------
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release                   // your existing line
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+SAFE FALLBACK (if the app still crashes after adding the rules): turn the shrinker off completely.
+The app gets a few MB bigger, but R8 can no longer remove anything.
+    isMinifyEnabled = false   // Groovy: minifyEnabled false
+    isShrinkResources = false // Groovy: shrinkResources false
